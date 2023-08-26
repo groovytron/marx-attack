@@ -1,0 +1,5 @@
+services:
+  gun:
+    image: gundb/gun:latest
+    ports:
+      - 8765:8765
