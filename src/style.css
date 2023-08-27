@@ -1,3 +1,12 @@
+@import url('');
+
+@font-face {
+  font-family: "Russo One";
+  src: url("RussoOne-Regular.ttf") format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
 :root {
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -31,9 +40,22 @@ body {
   min-height: 100vh;
 }
 
+p {
+  font-size: 2rem;
+}
+
 h1 {
-  font-size: 3.2em;
+  /* font-size: 3.2em; */
+  font-size: 5em;
   line-height: 1.1;
+  font-family: "Russo One";
+  text-align: center;
+  color: #caa81a;
+}
+
+h2 {
+  font-size: 3.2em;
+  color: #caa81a;
 }
 
 button {

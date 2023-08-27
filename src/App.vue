@@ -131,7 +131,22 @@ export default defineComponent({
 </script>
 
 <template>
-  <h1>Marx Attack</h1>
+  <div id="image-container">
+    <img id="marx-picture" src="/karl_marx.svg">
+  </div>
+  <h1 id="title">
+    Marx Attack
+  </h1>
+  <p id="subtitle">
+    L'application qui te permet d'influencer les choix des DJ's.
+  </p>
+  <p>
+    Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment.
+  </p>
+  <p>
+    <b>Tu n'as le droit de voter qu'une seule fois mais tu peux changer ton vote à tout moment et faire basculer la tendance.</b>
+  </p>
+  <h2>Suivi des tendances en temps réel</h2>
   <div id="canvas-container">
     <Bar :data="data" :options="options" />
   </div>
@@ -143,6 +158,20 @@ export default defineComponent({
 </template>
 
 <style scoped>
+  #title {
+    margin-bottom: 0;
+  }
+
+  #subtitle {
+    color: #caa81a;
+    margin-top: 0;
+  }
+
+  #image-container, #marx-picture {
+    max-width: 100%;
+    height: 30vh;
+  }
+
   #canvas-container {
     height: 50vh;
     width: 100%;
