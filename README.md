@@ -1,4 +1,14 @@
-# Vue 3 + TypeScript + Vite
+# Marx Attack
+
+<img src="./public/karl_marx_laser.svg" style="height=80px">
+
+An app that gives the people the power to vote for a music style they would like to listen and see the votes result in almost realtime.
+
+## Screenshot
+
+![](./doc/screenshot.jpg)
+
+## Development information
 
 This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
 
