@@ -37,7 +37,7 @@ resource "openstack_compute_keypair_v2" "mpoy_key_pair" {
 
 # Create a web security group
 resource "openstack_compute_secgroup_v2" "MarxAttackWeb" {
-  name        = "security_group_name"
+  name        = "marx_attack_web"
   description = "Marx Attack Webserver (22 - 80 - 443)"
 
   rule {
@@ -65,10 +65,10 @@ resource "openstack_compute_secgroup_v2" "MarxAttackWeb" {
 # Create a web server
 resource "openstack_compute_instance_v2" "web-server" {
   name            = "web-server"
-  image_id        = "image_id"
-  flavor_name     = "7918af3e-aa2a-4aa4-976d-9056490a4654"
+  image_id        = "eedd2690-6696-4619-a7cc-3f85a723c040"
+  flavor_name     = "a4-ram8-disk20-perf1"
   key_pair        = "mpoy_key_pair"
-  security_groups = ["MarxAttackWeb"]
+  security_groups = [openstack_compute_secgroup_v2.MarxAttackWeb.name]
 
   metadata = {
     application = "web-app"
