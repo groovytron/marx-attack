@@ -27,6 +27,7 @@ interface GenreSuggestion {
 const EVENT = import.meta.env.VITE_EVENT_NAME;
 const LOCAL_STORAGE_KEY = 'genre';
 const CHART_UPDATE_DELAY = 500;
+const WHITE = '#fff';
 
 export default defineComponent({
   components: {
@@ -54,14 +55,27 @@ export default defineComponent({
           },
         },
         scales: {
+          x: {
+            border: {
+              color: WHITE,
+            },
+            ticks: {
+              color: WHITE,
+            }
+          },
           y: {
+            border: {
+              color: WHITE,
+            },
             title: {
               display: true,
-              text: 'Voix',
+              text: 'Votes',
+              color: WHITE,
             },
             min: 0,
             ticks: {
-              stepSize: 1
+              stepSize: 1,
+              color: WHITE,
             }
           }
         }
