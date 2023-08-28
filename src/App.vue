@@ -28,6 +28,7 @@ const EVENT = import.meta.env.VITE_EVENT_NAME;
 const LOCAL_STORAGE_KEY = 'genre';
 const CHART_UPDATE_DELAY = 500;
 const WHITE = '#fff';
+const LABELS_FONT_SIZE = 18;
 
 export default defineComponent({
   components: {
@@ -51,7 +52,7 @@ export default defineComponent({
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            display: false
+            display: false,
           },
         },
         scales: {
@@ -61,7 +62,10 @@ export default defineComponent({
             },
             ticks: {
               color: WHITE,
-            }
+              font: {
+                size: LABELS_FONT_SIZE,
+              },
+            },
           },
           y: {
             border: {
@@ -71,11 +75,17 @@ export default defineComponent({
               display: true,
               text: 'Votes',
               color: WHITE,
+              font: {
+                size: LABELS_FONT_SIZE,
+              },
             },
             min: 0,
             ticks: {
               stepSize: 1,
               color: WHITE,
+              font: {
+                size: LABELS_FONT_SIZE,
+              },
             }
           }
         }
@@ -156,8 +166,8 @@ export default defineComponent({
           {
             label: 'Votes',
             data: Array.from(this.genreStats.values()),
-            backgroundColor: '#eacc2c',
-            color: '#fff',
+            backgroundColor: import.meta.env.VITE_CHART_COLOR,
+            color: WHITE,
           }
         ]
       };
