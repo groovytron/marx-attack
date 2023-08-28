@@ -14,16 +14,19 @@ import {
   LinearScale
 } from 'chart.js'
 import { Bar } from 'vue-chartjs'
+import { BehaviorSubject } from 'rxjs';
+import { bufferTime } from 'rxjs/operators';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, Colors);
 
 interface GenreSuggestion {
-  add: string;
+  add: string|null;
   remove: string|null;
 }
 
 const EVENT = import.meta.env.VITE_EVENT_NAME;
 const LOCAL_STORAGE_KEY = 'genre';
+const CHART_UPDATE_DELAY = 500;
 
 export default defineComponent({
   components: {
@@ -36,7 +39,8 @@ export default defineComponent({
       gunStats: {} as IGunChain<any>,
       genreStats: new Map<string, number>(),
       previousChanges: new Array<string>(),
-      previousGenre: '',
+      previousGenre: null as string|null,
+      votesChanges: new BehaviorSubject<GenreSuggestion|null>(null),
       data: {
         labels: [] as string[],
         datasets: [] as any[]
@@ -65,7 +69,7 @@ export default defineComponent({
     };
   },
   mounted() {
-    this.previousGenre = localStorage.getItem(LOCAL_STORAGE_KEY) ?? '';
+    this.previousGenre = localStorage.getItem(LOCAL_STORAGE_KEY) ?? null;
 
     this.gun = Gun(GUN_RELAY_HOSTS);
 
@@ -73,11 +77,17 @@ export default defineComponent({
 
     this.resetStats();
 
-    this.gunStats.map().on((data: GenreSuggestion, id: string) => {
+    this.votesChanges.pipe(
+      bufferTime(CHART_UPDATE_DELAY)
+    ).subscribe(() => this.updateChartConfig());
+
+    this.gunStats.map().on((data: GenreSuggestion|null, id: string) => {
       // Eliminate double events
       if (this.previousChanges.includes(id)) {
         return;
       }
+
+      this.votesChanges.next(data);
 
       this.previousChanges.push(id);
 
@@ -87,7 +97,9 @@ export default defineComponent({
         return;
       }
 
-      this.genreStats.set(data.add, (this.genreStats.get(data.add) ?? 0) + 1);
+      if (data.add) {
+        this.genreStats.set(data.add, (this.genreStats.get(data.add) ?? 0) + 1);
+      }
 
       if (data.remove) {
         const result = this.genreStats.get(data.remove);
@@ -97,12 +109,23 @@ export default defineComponent({
         }
       }
 
-      this.updateChartConfig();
+      // this.updateChartConfig();
     });
   },
   methods: {
-    suggestGenre(genre: string) {
+    suggestGenre(genre: string|null) {
       const previousGenre = localStorage.getItem(LOCAL_STORAGE_KEY);
+
+      if (genre === null) {
+        if (previousGenre !== null) {
+          this.gunStats.set({add: null, remove: previousGenre});
+        }
+
+        localStorage.removeItem(LOCAL_STORAGE_KEY);
+        this.previousGenre = genre;
+
+        return;
+      }
 
       this.gunStats.set({add: genre, remove: previousGenre});
 
@@ -111,7 +134,6 @@ export default defineComponent({
     },
     resetStats() {
       this.musicGenres.forEach((genreItem: string) => this.genreStats.set(genreItem, 0));
-      this.updateChartConfig();
     },
     updateChartConfig() {
       this.data = {
@@ -153,6 +175,9 @@ export default defineComponent({
   <div>
     <button v-for="genreItem in musicGenres" :key="genreItem" @click="suggestGenre(genreItem)" :disabled="previousGenre === genreItem">
       {{ genreItem }}
+    </button>
+    <button @click="suggestGenre(null)" :disabled="previousGenre === null">
+      Je m'abstiens
     </button>
   </div>
 </template>
