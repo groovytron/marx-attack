@@ -187,7 +187,7 @@ export default defineComponent({
     L'application qui te permet d'influencer les choix des DJ's.
   </p>
   <p>
-    Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment.
+    Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment à l'aide des boutons en-dessous du graphe. Une fois que tu as voté le bouton correspondant sera désactivé.
   </p>
   <p>
     <b>Tu n'as le droit de voter qu'une seule fois mais tu peux changer ton vote à tout moment et faire basculer la tendance.</b>
@@ -196,6 +196,7 @@ export default defineComponent({
   <div id="canvas-container">
     <Bar :data="data" :options="options" />
   </div>
+  <h2>Ton vote</h2>
   <div>
     <button v-for="genreItem in musicGenres" :key="genreItem" @click="suggestGenre(genreItem)" :disabled="previousGenre === genreItem">
       {{ genreItem }}
