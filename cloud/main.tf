@@ -19,19 +19,19 @@ variable "ssh_public_key" {
 
 # Configure the OpenStack Provider
 provider "openstack" {
-  auth_url = data.external.env.result["os_auth_url"]
-  region = data.external.env.result["os_region"]
-  user_name = data.external.env.result["os_user_name"]
-  password = data.external.env.result["os_password"]
-  user_domain_name = data.external.env.result["os_user_domain_name"]
+  auth_url          = data.external.env.result["os_auth_url"]
+  region            = data.external.env.result["os_region"]
+  user_name         = data.external.env.result["os_user_name"]
+  password          = data.external.env.result["os_password"]
+  user_domain_name  = data.external.env.result["os_user_domain_name"]
   project_domain_id = data.external.env.result["os_project_domain_id"]
-  tenant_id = data.external.env.result["os_tenant_id"]
-  tenant_name = data.external.env.result["os_tenant_name"]
+  tenant_id         = data.external.env.result["os_tenant_id"]
+  tenant_name       = data.external.env.result["os_tenant_name"]
 }
 
 # Upload public key
 resource "openstack_compute_keypair_v2" "mpoy_key_pair" {
-  name = "mpoy_key_pair"
+  name       = "mpoy_key_pair"
   public_key = var.ssh_public_key
 }
 
