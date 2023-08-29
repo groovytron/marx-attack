@@ -15,7 +15,8 @@ import {
 } from 'chart.js'
 import { Bar } from 'vue-chartjs'
 import { BehaviorSubject } from 'rxjs';
-import { bufferTime } from 'rxjs/operators';
+import { bufferTime, filter } from 'rxjs/operators';
+import Fireworks from '@fireworks-js/vue';
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, Colors);
 
@@ -24,15 +25,24 @@ interface GenreSuggestion {
   remove: string|null;
 }
 
+interface GenreMajorityEvent {
+  genre: string;
+  maximum: number;
+}
+
 const EVENT = import.meta.env.VITE_EVENT_NAME;
 const LOCAL_STORAGE_KEY = 'genre';
 const CHART_UPDATE_DELAY = 500;
+const SECONDS_TO_MILLISECONDS = 1000;
+const MAJORITY_UPDATE_DELAY = 15;
+const FIREWORKS_DURATION = 5;
 const WHITE = '#fff';
-const LABELS_FONT_SIZE = 18;
+const LABELS_FONT_SIZE = 14;
 
 export default defineComponent({
   components: {
     Bar,
+    Fireworks
   },
   data() {
     return {
@@ -44,6 +54,10 @@ export default defineComponent({
       previousChanges: new Array<string>(),
       previousGenre: null as string|null,
       votesChanges: new BehaviorSubject<GenreSuggestion|null>(null),
+      majorityGenre: '',
+      liveMajority: '',
+      majorityChanged: new BehaviorSubject<GenreMajorityEvent>({genre: '', maximum: 0}),
+      fireworksOptions: { opacity: 0.5 },
       data: {
         labels: [] as string[],
         datasets: [] as any[]
@@ -104,7 +118,27 @@ export default defineComponent({
 
     this.votesChanges.pipe(
       bufferTime(CHART_UPDATE_DELAY)
-    ).subscribe(() => this.updateChartConfig());
+    ).subscribe(() => {
+      this.updateChartConfig();
+      this.computeMajority();
+    });
+
+    this.majorityChanged.pipe(
+      filter(() => this.$refs.fireworks !== null),
+      filter(e => e.genre !== this.majorityGenre),
+      bufferTime(MAJORITY_UPDATE_DELAY * SECONDS_TO_MILLISECONDS),
+      filter(e => e.length > 0),
+    ).subscribe((majorities: GenreMajorityEvent[]) => {
+      const majority = majorities.pop() as GenreMajorityEvent;
+
+      this.majorityGenre = majority.genre;
+
+      const fireworks = this.$refs.fireworks as typeof Fireworks;
+
+      fireworks.start();
+
+      setTimeout(() => fireworks.stop(), FIREWORKS_DURATION * SECONDS_TO_MILLISECONDS);
+    });
 
     this.gunStats.map().on((data: GenreSuggestion|null, id: string) => {
       // Eliminate double events
@@ -177,51 +211,100 @@ export default defineComponent({
           }
         ]
       };
+    },
+    computeMajority() {
+      const maximum = Math.max(...Array.from(this.genreStats.values()));
+      const maximumEntries = Array.from(this.genreStats.entries()).filter((item: [string, number]) => item[1] === maximum);
+
+      if (maximumEntries.length === 0 || maximumEntries.length > 1) {
+        this.liveMajority = '';
+        return;
+      }
+
+      if (maximumEntries.length === 1) {
+        const genre = maximumEntries[0][0];
+
+        this.liveMajority = genre;
+
+        this.majorityChanged.next({
+          genre,
+          maximum
+        });
+      }
     }
   }
 })
 </script>
 
 <template>
-  <div id="image-container">
-    <img id="marx-picture" src="/karl_marx_laser_multiple.svg">
+  <div class="content">
+    <div id="image-container">
+      <img id="marx-picture" src="/karl_marx_laser_multiple.svg">
+    </div>
+    <h1 id="title">
+      Marx Attack
+    </h1>
+    <p id="subtitle">
+      L'application qui te permet d'influencer les choix des DJ's.
+    </p>
+    <p>
+      Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment à l'aide des boutons en-dessous du graphe. Une fois que tu as voté le bouton correspondant sera désactivé.
+    </p>
+    <p>
+      <b>Tu n'as le droit de voter qu'une seule fois mais tu peux changer ton vote à tout moment et faire basculer la tendance.</b>
+    </p>
+    <h2>Suivi des tendances en temps réel</h2>
+    <div id="canvas-container">
+      <Bar :data="data" :options="options" />
+    </div>
+    <h2>Ton vote</h2>
+    <div>
+      <button v-for="genreItem in musicGenres" :key="genreItem" @click="suggestGenre(genreItem)" :disabled="previousGenre === genreItem">
+        {{ genreItem }}
+      </button>
+      <button @click="suggestGenre(null)" :disabled="previousGenre === null">
+        Je m'abstiens
+      </button>
+      <h3 v-if="liveMajority !== ''">
+        Majorité: <span id="live-majority">{{ liveMajority }}</span>
+      </h3>
+    </div>
+    <div v-if="adminModeIsEnabled === true">
+      <h2>
+        Danger zone
+      </h2>
+      <button @click="resetVotes()">
+        S'affranchir de la volonté du peuple !!!
+      </button>
+    </div>
   </div>
-  <h1 id="title">
-    Marx Attack
-  </h1>
-  <p id="subtitle">
-    L'application qui te permet d'influencer les choix des DJ's.
-  </p>
-  <p>
-    Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment à l'aide des boutons en-dessous du graphe. Une fois que tu as voté le bouton correspondant sera désactivé.
-  </p>
-  <p>
-    <b>Tu n'as le droit de voter qu'une seule fois mais tu peux changer ton vote à tout moment et faire basculer la tendance.</b>
-  </p>
-  <h2>Suivi des tendances en temps réel</h2>
-  <div id="canvas-container">
-    <Bar :data="data" :options="options" />
-  </div>
-  <h2>Ton vote</h2>
-  <div>
-    <button v-for="genreItem in musicGenres" :key="genreItem" @click="suggestGenre(genreItem)" :disabled="previousGenre === genreItem">
-      {{ genreItem }}
-    </button>
-    <button @click="suggestGenre(null)" :disabled="previousGenre === null">
-      Je m'abstiens
-    </button>
-  </div>
-  <div v-if="adminModeIsEnabled === true">
-    <h2>
-      Danger zone
-    </h2>
-    <button @click="resetVotes()">
-      S'affranchir de la volonté du peuple !!!
-    </button>
-  </div>
+  <Fireworks
+    ref="fireworks"
+    :autostart="false"
+    :options="fireworksOptions"
+    :style="{
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      position: 'fixed',
+    }"
+  />
 </template>
 
 <style scoped>
+  .content {
+    z-index: 1;
+    position: absolute;
+    left: 2em;
+    top: 2em;
+    right: 2em;
+
+    * {
+      position: static;
+    }
+  }
+
   #title {
     margin-bottom: 0;
   }
@@ -240,6 +323,10 @@ export default defineComponent({
     height: 50vh;
     width: 100%;
     margin-bottom: 2em;
+  }
+
+  #live-majority {
+    color: #caa81a;
   }
 
   button:not(:first-child) {
