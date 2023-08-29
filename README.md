@@ -1,5 +1,7 @@
 # Marx Attack
 
+[![CI](https://github.com/groovytron/marx-attack/actions/workflows/main.yaml/badge.svg)](https://github.com/groovytron/marx-attack/actions/workflows/main.yaml)
+
 <img src="./public/karl_marx_laser.svg" style="height=80px">
 
 An app that gives the people the power to vote for a music style they would like to listen and see the votes result in almost realtime.
