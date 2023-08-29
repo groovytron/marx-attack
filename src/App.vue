@@ -277,6 +277,11 @@ export default defineComponent({
         S'affranchir de la volonté du peuple !!!
       </button>
     </div>
+    <p id="footer">
+      Made with ♥️ by
+      <a href="https://github.com/groovytron" target="_blank">groovytron</a> in
+      Switzerland
+    </p>
   </div>
   <Fireworks
     ref="fireworks"
@@ -335,5 +340,9 @@ export default defineComponent({
 
   button {
     margin-top: 0.25em;
+  }
+
+  #footer {
+    text-align: center;
   }
 </style>
