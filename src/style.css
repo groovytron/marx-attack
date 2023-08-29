@@ -91,6 +91,11 @@ button {
   color: white;
 }
 
+button[disabled] {
+  color: yellow;
+  background-color: #5f5f5f;
+}
+
 /*@media (prefers-color-scheme: light) {
   :root {
     color: #213547;
