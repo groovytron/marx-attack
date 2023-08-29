@@ -36,6 +36,7 @@ export default defineComponent({
   },
   data() {
     return {
+      adminModeIsEnabled: import.meta.env.VITE_ADMIN_MODE === "true",
       musicGenres: MUSIC_GENRES,
       gun: {} as IGunInstance<any>,
       gunStats: {} as IGunChain<any>,
@@ -116,7 +117,8 @@ export default defineComponent({
       this.previousChanges.push(id);
 
       if (data === null) {
-        this.resetStats();
+        this.resetStatsAndVote();
+        this.votesChanges.next(data);
 
         return;
       }
@@ -132,8 +134,6 @@ export default defineComponent({
           this.genreStats.set(data.remove, result - 1);
         }
       }
-
-      // this.updateChartConfig();
     });
   },
   methods: {
@@ -156,8 +156,18 @@ export default defineComponent({
       localStorage.setItem(LOCAL_STORAGE_KEY, genre);
       this.previousGenre = genre;
     },
+    resetStatsAndVote() {
+      this.resetStats();
+
+      this.previousGenre = null;
+
+      localStorage.removeItem(LOCAL_STORAGE_KEY);
+    },
     resetStats() {
       this.musicGenres.forEach((genreItem: string) => this.genreStats.set(genreItem, 0));
+    },
+    resetVotes() {
+      this.gunStats.set(null as any);
     },
     updateChartConfig() {
       this.data = {
@@ -203,6 +213,14 @@ export default defineComponent({
     </button>
     <button @click="suggestGenre(null)" :disabled="previousGenre === null">
       Je m'abstiens
+    </button>
+  </div>
+  <div v-if="adminModeIsEnabled === true">
+    <h2>
+      Danger zone
+    </h2>
+    <button @click="resetVotes()">
+      S'affranchir de la volonté du peuple !!!
     </button>
   </div>
 </template>
