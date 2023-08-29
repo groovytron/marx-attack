@@ -344,5 +344,6 @@ export default defineComponent({
 
   #footer {
     text-align: center;
+    font-size: 1em;
   }
 </style>
