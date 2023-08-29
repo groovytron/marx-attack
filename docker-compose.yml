@@ -1,5 +1,21 @@
 services:
-  gun:
+  gun01:
     image: gundb/gun:latest
+    environment:
+      - PEERS=gun02,gun02
     ports:
       - 8765:8765
+
+  gun02:
+    image: gundb/gun:latest
+    environment:
+      - PEERS=gun01,gun03
+    ports:
+      - 8766:8765
+
+  gun03:
+    image: gundb/gun:latest
+    environment:
+      - PEERS=gun01,gun02
+    ports:
+      - 8767:8765
