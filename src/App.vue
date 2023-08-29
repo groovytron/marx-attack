@@ -131,7 +131,7 @@ export default defineComponent({
         const result = this.genreStats.get(data.remove);
 
         if (result !== undefined && result !== 0) {
-          this.genreStats.set(data.remove, result - 1);
+          this.genreStats.set(data.remove, Math.max(result - 1, 0));
         }
       }
     });
@@ -158,10 +158,6 @@ export default defineComponent({
     },
     resetStatsAndVote() {
       this.resetStats();
-
-      this.previousGenre = null;
-
-      localStorage.removeItem(LOCAL_STORAGE_KEY);
     },
     resetStats() {
       this.musicGenres.forEach((genreItem: string) => this.genreStats.set(genreItem, 0));
