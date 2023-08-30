@@ -239,7 +239,7 @@ export default defineComponent({
 <template>
   <div class="content">
     <div id="image-container">
-      <img id="marx-picture" src="/karl_marx_laser_multiple.svg">
+      <img id="marx-picture" src="/karl_marx_laser_multiple.webp">
     </div>
     <h1 id="title">
       Marx Attack
