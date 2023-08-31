@@ -136,7 +136,7 @@ export default defineComponent({
     const lang = localStorage.getItem(LANG_STORAGE_KEY);
 
     if (lang !== null && this.languages.includes(lang)) {
-      this.$root.$i18n.locale = lang;
+      this.$root!.$i18n.locale = lang;
     }
 
     this.previousGenre = localStorage.getItem(LOCAL_STORAGE_KEY) ?? null;
@@ -277,7 +277,7 @@ export default defineComponent({
       <img id="marx-picture" src="/karl_marx_laser_multiple.webp">
     </div>
     <div id="language-buttons">
-      <button v-for="(lang, i) in languages" :key="`Lang${i}`" @click="$root.$i18n.locale = lang" :disabled="$i18n.locale.split('-')[0] === lang">
+      <button v-for="(lang, i) in languages" :key="`Lang${i}`" @click="$root!.$i18n.locale = lang" :disabled="$i18n.locale.split('-')[0] === lang">
         {{ languagesMap.get(lang) }}
       </button>
     </div>
