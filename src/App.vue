@@ -345,7 +345,6 @@ export default defineComponent({
   #canvas-container {
     height: 50vh;
     width: 100%;
-    margin-bottom: 2em;
   }
 
   #vote-heading {
