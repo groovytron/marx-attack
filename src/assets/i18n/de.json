@@ -1,0 +1,15 @@
+{
+  "subtitle": "Die App, mit der Sie die Auswahl der DJs beeinflussen können.",
+  "chartTitle": "Verfolgung von Trends in Echtzeit",
+  "votes": "Stimmen",
+  "yourVote": "Deine Stimme",
+  "majority": "Mehrheit",
+  "abstain": "sich der Stimme enthalten",
+  "lost": "Hast du dich verlaufen? Lese die <a href=\"#instructions\">Erklärungen</a>.",
+  "resetVotes": "Sich vom Willen des Volkes befreien !!!",
+  "instructions": {
+    "first": "Möchtest du, dass ein bestimmter Stil im Stand gespielt wird? Wähle einfach mithilfe der Schaltflächen unterhalb der Grafik den Musikstil, der dich gerade anspricht. Sobald du abgestimmt hast, wird der entsprechende Button deaktiviert.",
+    "second": "Du darfst nur einmal abstimmen, kannst deine Stimme aber jederzeit ändern und den Trend umkehren."
+  },
+  "backToVotes": "Zurück zu den <a href=\"#canvas-container\">Abstimmungsergebnisse</a> !"
+}

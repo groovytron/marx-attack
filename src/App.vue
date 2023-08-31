@@ -32,6 +32,7 @@ interface GenreMajorityEvent {
 
 const EVENT = import.meta.env.VITE_EVENT_NAME;
 const LOCAL_STORAGE_KEY = 'genre';
+const LANG_STORAGE_KEY = 'lang';
 const CHART_UPDATE_DELAY = 500;
 const SECONDS_TO_MILLISECONDS = 1000;
 const MAJORITY_UPDATE_DELAY = 15;
@@ -45,25 +46,14 @@ export default defineComponent({
     Bar,
     Fireworks
   },
-  data() {
-    return {
-      adminModeIsEnabled: import.meta.env.VITE_ADMIN_MODE === "true",
-      musicGenres: MUSIC_GENRES,
-      gun: {} as IGunInstance<any>,
-      gunStats: {} as IGunChain<any>,
-      genreStats: new Map<string, number>(),
-      previousChanges: new Array<string>(),
-      previousGenre: null as string|null,
-      votesChanges: new BehaviorSubject<GenreSuggestion|null>(null),
-      majorityGenre: '',
-      liveMajority: '',
-      majorityChanged: new BehaviorSubject<GenreMajorityEvent>({genre: '', maximum: 0}),
-      fireworksOptions: { opacity: 0.5 },
-      data: {
-        labels: [] as string[],
-        datasets: [] as any[]
-      } as any,
-      options: {
+  watch: {
+    '$i18n.locale': (newValue: string) => {
+      localStorage.setItem(LANG_STORAGE_KEY, newValue);
+    }
+  },
+  computed: {
+    options() {
+      return {
         responsive: true,
         maintainAspectRatio: false,
         plugins: {
@@ -72,7 +62,7 @@ export default defineComponent({
           },
           title: {
             display: true,
-            text: 'Suivi des tendances en temps réel',
+            text: this.$t('chartTitle'),
             color:  CHART_COLOR,
             font: {
               size: 51.2,
@@ -97,7 +87,7 @@ export default defineComponent({
             },
             title: {
               display: true,
-              text: 'Votes',
+              text: this.$t('votes'),
               color: WHITE,
               font: {
                 size: LABELS_FONT_SIZE,
@@ -113,10 +103,42 @@ export default defineComponent({
             }
           }
         }
-      }
+      };
+    }
+  },
+  data() {
+    return {
+      languages: ['fr', 'de', 'en'],
+      languagesMap: new Map<string, string>([
+        ['fr', 'Français'],
+        ['de', 'Deutsch'],
+        ['en', 'English']
+      ]),
+      adminModeIsEnabled: import.meta.env.VITE_ADMIN_MODE === "true",
+      musicGenres: MUSIC_GENRES,
+      gun: {} as IGunInstance<any>,
+      gunStats: {} as IGunChain<any>,
+      genreStats: new Map<string, number>(),
+      previousChanges: new Array<string>(),
+      previousGenre: null as string|null,
+      votesChanges: new BehaviorSubject<GenreSuggestion|null>(null),
+      majorityGenre: '',
+      liveMajority: '',
+      majorityChanged: new BehaviorSubject<GenreMajorityEvent>({genre: '', maximum: 0}),
+      fireworksOptions: { opacity: 0.5 },
+      data: {
+        labels: [] as string[],
+        datasets: [] as any[]
+      } as any,
     };
   },
   mounted() {
+    const lang = localStorage.getItem(LANG_STORAGE_KEY);
+
+    if (lang !== null && this.languages.includes(lang)) {
+      this.$root.$i18n.locale = lang;
+    }
+
     this.previousGenre = localStorage.getItem(LOCAL_STORAGE_KEY) ?? null;
 
     this.gun = Gun(GUN_RELAY_HOSTS);
@@ -254,28 +276,32 @@ export default defineComponent({
     <div id="image-container">
       <img id="marx-picture" src="/karl_marx_laser_multiple.webp">
     </div>
+    <div id="language-buttons">
+      <button v-for="(lang, i) in languages" :key="`Lang${i}`" @click="$root.$i18n.locale = lang" :disabled="$i18n.locale.split('-')[0] === lang">
+        {{ languagesMap.get(lang) }}
+      </button>
+    </div>
     <h1 id="title">
       Marx Attack
     </h1>
     <p id="subtitle">
-      L'application qui te permet d'influencer les choix des DJ's.
+      {{ $t('subtitle') }}
     </p>
     <div id="canvas-container">
       <Bar :data="data" :options="options" />
     </div>
-    <h2 id="vote-heading">Ton vote</h2>
+    <h2 id="vote-heading">{{ $t('yourVote') }}</h2>
     <div>
       <button v-for="genreItem in musicGenres" :key="genreItem" @click="suggestGenre(genreItem)" :disabled="previousGenre === genreItem">
         {{ genreItem }}
       </button>
       <button @click="suggestGenre(null)" :disabled="previousGenre === null">
-        Je m'abstiens
+        {{ $t('abstain') }}
       </button>
       <h3 v-if="liveMajority !== ''">
-        Majorité: <span id="live-majority">{{ liveMajority }}</span>
+        {{ $t('majority') }}: <span id="live-majority">{{ liveMajority }}</span>
       </h3>
-      <p>
-        T'es perdu(e) ? Check les <a href="#instructions">explications</a>.
+      <p v-html="$t('lost')">
       </p>
     </div>
     <div v-if="adminModeIsEnabled === true">
@@ -283,17 +309,16 @@ export default defineComponent({
         Danger zone
       </h2>
       <button @click="resetVotes()">
-        S'affranchir de la volonté du peuple !!!
+        {{ $t('resetVotes') }}
       </button>
     </div>
     <p id="instructions">
-      Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment à l'aide des boutons en-dessous du graphe. Une fois que tu as voté le bouton correspondant sera désactivé.
+      {{ $t('instructions.first') }}
     </p>
     <p>
-      <b>Tu n'as le droit de voter qu'une seule fois mais tu peux changer ton vote à tout moment et faire basculer la tendance.</b>
+      <b>{{ $t('instructions.second') }}</b>
     </p>
-    <p>
-      Retour aux <a href="#canvas-container">votes</a> !
+    <p v-html="$t('backToVotes')">
     </p>
     <p id="footer">
       Made with ♥️ by
@@ -329,7 +354,12 @@ export default defineComponent({
   }
 
   #title {
+    margin-top: 0;
     margin-bottom: 0;
+  }
+
+  #language-buttons {
+    margin-top: 0.75em;
   }
 
   #subtitle {

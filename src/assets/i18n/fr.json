@@ -1,0 +1,15 @@
+{
+  "subtitle": "L'application qui te permet d'influencer les choix des DJ's.",
+  "chartTitle": "Suivi des tendances en temps réel",
+  "votes": "Votes",
+  "yourVote": "Ton vote",
+  "majority": "Majorité",
+  "abstain": "Je m'abstiens",
+  "lost": "T'es perdu(e) ? Check les <a href=\"#instructions\">explications</a>.",
+  "resetVotes": "S'affranchir de la volonté du peuple !!!",
+  "instructions": {
+    "first": "Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment à l'aide des boutons en-dessous du graphe. Une fois que tu as voté le bouton correspondant sera désactivé.",
+    "second": "Tu n'as le droit de voter qu'une seule fois mais tu peux changer ton vote à tout moment et faire basculer la tendance."
+  },
+  "backToVotes": "Retour aux <a href=\"#canvas-container\">votes</a> !"
+}

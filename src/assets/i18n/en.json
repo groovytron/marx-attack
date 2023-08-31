@@ -1,0 +1,15 @@
+{
+  "subtitle": "The app that allows you to influence the DJs' choices.",
+  "chartTitle": "Realtime votes results",
+  "votes": "Votes",
+  "yourVote": "Your vote",
+  "majority": "Majority",
+  "abstain": "Abstain",
+  "lost": "Are you lost ? Check the <a href=\"#instructions\">explainations</a>.",
+  "resetVotes": "Breaking free from the will of the people !!!",
+  "instructions": {
+    "first": "Would you like a particular style to be played in the booth? All you have to do is select the style of music you're currently enjoying using the buttons below the graph. Once you've voted, the corresponding button will be deactivated.",
+    "second": "You only have the right to vote once, but you can change your vote at any time and tip the balance."
+  },
+  "backToVotes": "Back to the <a href=\"#canvas-container\">votes</a> !"
+}
