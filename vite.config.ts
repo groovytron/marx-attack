@@ -2,13 +2,12 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
-export default () => {
-  const DEV = process.env.NODE_ENV === 'development';
+export default ({mode}) => {
   return defineConfig({
     plugins: [vue()],
     build: {
-      sourcemap: DEV,
-      minify: DEV ? 'esbuild' : 'terser',
+      sourcemap: mode === 'development',
+      minify: mode === 'development' ? 'esbuild' : 'terser',
     },
     // https://github.com/intlify/vue-i18n-next/issues/789#issuecomment-1138210323
     resolve: {
