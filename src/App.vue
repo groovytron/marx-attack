@@ -207,6 +207,12 @@ export default defineComponent({
   },
   methods: {
     suggestGenre(genre: string|null) {
+      if (this.adminModeIsEnabled === true) {
+        this.gunStats.set({add: genre, remove: null});
+
+        return;
+      }
+
       const previousGenre = localStorage.getItem(LOCAL_STORAGE_KEY);
 
       if (genre === null) {
@@ -292,7 +298,7 @@ export default defineComponent({
     </div>
     <h2 id="vote-heading">{{ $t('yourVote') }}</h2>
     <div>
-      <button v-for="genreItem in musicGenres" :key="genreItem" @click="suggestGenre(genreItem)" :disabled="previousGenre === genreItem">
+      <button v-for="genreItem in musicGenres" :key="genreItem" @click="suggestGenre(genreItem)" :disabled="previousGenre === genreItem && !adminModeIsEnabled">
         {{ genreItem }}
       </button>
       <button @click="suggestGenre(null)" :disabled="previousGenre === null">
