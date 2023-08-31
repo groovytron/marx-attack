@@ -38,6 +38,7 @@ const MAJORITY_UPDATE_DELAY = 15;
 const FIREWORKS_DURATION = 5;
 const WHITE = '#fff';
 const LABELS_FONT_SIZE = 14;
+const CHART_COLOR = import.meta.env.VITE_CHART_COLOR;
 
 export default defineComponent({
   components: {
@@ -68,6 +69,14 @@ export default defineComponent({
         plugins: {
           legend: {
             display: false,
+          },
+          title: {
+            display: true,
+            text: 'Suivi des tendances en temps réel',
+            color:  CHART_COLOR,
+            font: {
+              size: 51.2,
+            }
           },
         },
         scales: {
@@ -134,6 +143,10 @@ export default defineComponent({
       this.majorityGenre = majority.genre;
 
       const fireworks = this.$refs.fireworks as typeof Fireworks;
+
+      if (fireworks === null) {
+        return;
+      }
 
       fireworks.start();
 
@@ -206,7 +219,7 @@ export default defineComponent({
           {
             label: 'Votes',
             data: Array.from(this.genreStats.values()),
-            backgroundColor: import.meta.env.VITE_CHART_COLOR,
+            backgroundColor: CHART_COLOR,
             color: WHITE,
           }
         ]
@@ -247,13 +260,6 @@ export default defineComponent({
     <p id="subtitle">
       L'application qui te permet d'influencer les choix des DJ's.
     </p>
-    <p>
-      Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment à l'aide des boutons en-dessous du graphe. Une fois que tu as voté le bouton correspondant sera désactivé.
-    </p>
-    <p>
-      <b>Tu n'as le droit de voter qu'une seule fois mais tu peux changer ton vote à tout moment et faire basculer la tendance.</b>
-    </p>
-    <h2>Suivi des tendances en temps réel</h2>
     <div id="canvas-container">
       <Bar :data="data" :options="options" />
     </div>
@@ -268,6 +274,9 @@ export default defineComponent({
       <h3 v-if="liveMajority !== ''">
         Majorité: <span id="live-majority">{{ liveMajority }}</span>
       </h3>
+      <p>
+        T'es perdu(e) ? Check les <a href="#instructions">explications</a>.
+      </p>
     </div>
     <div v-if="adminModeIsEnabled === true">
       <h2>
@@ -277,6 +286,15 @@ export default defineComponent({
         S'affranchir de la volonté du peuple !!!
       </button>
     </div>
+    <p id="instructions">
+      Tu souhaites qu'un style particulier passe dans le stand ? Il te suffit de choisir le style de musique qui te fait plaisir en ce moment à l'aide des boutons en-dessous du graphe. Une fois que tu as voté le bouton correspondant sera désactivé.
+    </p>
+    <p>
+      <b>Tu n'as le droit de voter qu'une seule fois mais tu peux changer ton vote à tout moment et faire basculer la tendance.</b>
+    </p>
+    <p>
+      Retour aux <a href="#canvas-container">votes</a> !
+    </p>
     <p id="footer">
       Made with ♥️ by
       <a href="https://github.com/groovytron" target="_blank">groovytron</a> in
