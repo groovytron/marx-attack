@@ -263,7 +263,7 @@ export default defineComponent({
     <div id="canvas-container">
       <Bar :data="data" :options="options" />
     </div>
-    <h2>Ton vote</h2>
+    <h2 id="vote-heading">Ton vote</h2>
     <div>
       <button v-for="genreItem in musicGenres" :key="genreItem" @click="suggestGenre(genreItem)" :disabled="previousGenre === genreItem">
         {{ genreItem }}
@@ -346,6 +346,11 @@ export default defineComponent({
     height: 50vh;
     width: 100%;
     margin-bottom: 2em;
+  }
+
+  #vote-heading {
+    margin-top: 0.125em;
+    margin-bottom: 0.125em;
   }
 
   #live-majority {
