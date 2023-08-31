@@ -274,7 +274,7 @@ export default defineComponent({
 <template>
   <div class="content">
     <div id="image-container">
-      <img id="marx-picture" src="/images/karl_marx_laser_multiple.webp">
+      <img id="marx-picture" src="/images/karl_marx_laser_multiple.webp" fetchpriority="high">
     </div>
     <div id="language-buttons">
       <button v-for="(lang, i) in languages" :key="`Lang${i}`" @click="$root!.$i18n.locale = lang" :disabled="$i18n.locale.split('-')[0] === lang">
