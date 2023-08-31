@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vue-tsc && vite build",
+    "build": "vue-tsc && vite build && node ./fix-stylesheet-preload.js",
     "preview": "vite preview"
   },
   "dependencies": {
@@ -20,6 +20,7 @@
   "devDependencies": {
     "@types/node": "^20.5.7",
     "@vitejs/plugin-vue": "^4.2.3",
+    "jsdom": "^22.1.0",
     "terser": "^5.19.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.5",
