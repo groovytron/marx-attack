@@ -1,8 +1,9 @@
 @font-face {
   font-family: "Russo One";
-  src: url("assets/fonts/RussoOne-Regular.ttf") format('truetype');
+  src: url('/fonts/RussoOne-Regular.ttf');
   font-weight: 400;
   font-style: normal;
+  font-display: swap;
 }
 
 :root {

@@ -13,6 +13,8 @@ const app = createApp(App);
 const i18n = createI18n({
   warnHtmlInMessage: 'off',
   fallbackLocale: "en",
+  silentTranslationWarn: true,
+  silentFallbackWarn: true,
   messages: {
     fr,
     de,
