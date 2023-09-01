@@ -1,0 +1,17 @@
+{
+  "short_name": "Marx Attack",
+  "name": "Marx Attack",
+  "background_color": "#242424",
+  "icons": [
+    {
+      "src": "/images/karl_marx_laser.svg",
+      "type": "image/svg+xml",
+      "sizes": "600x600"
+    }
+  ],
+  "id": "/",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "scope": "/",
+  "description": "The app that give people the power influence DJs' choices."
+}
