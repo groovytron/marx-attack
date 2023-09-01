@@ -6,7 +6,17 @@
     {
       "src": "/images/karl_marx_laser.svg",
       "type": "image/svg+xml",
-      "sizes": "600x600"
+      "sizes": "48x48",
+    },
+    {
+      "src": "/images/karl_marx_laser.svg",
+      "type": "image/svg+xml",
+      "sizes": "72x72 96x96 128x128 256x256"
+    },
+    {
+      "src": "/images/karl_marx_laser.svg",
+      "type": "image/svg+xml",
+      "sizes": "257x257"
     }
   ],
   "id": "/",
